@@ -1,31 +1,43 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import DatePicker from 'react-datepicker';
-import "react-datepicker/dist/react-datepicker.css";
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import 'react-datepicker/dist/react-datepicker.css';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 import './App.css';
 
 function App() {
-  // Load tasks from localStorage
-  const [tasks, setTasks] = useState(() => {
-    const savedTasks = localStorage.getItem('tasks');
-    return savedTasks ? JSON.parse(savedTasks) : [];
+  const [taskLists, setTaskLists] = useState(() => {
+    const savedTaskLists = localStorage.getItem('taskLists');
+    return savedTaskLists ? JSON.parse(savedTaskLists) : [{ name: 'Default', tasks: [] }];
   });
 
-  const [filter, setFilter] = useState('all');
+  const [selectedListIndex, setSelectedListIndex] = useState(0);
   const [newTask, setNewTask] = useState('');
   const [priority, setPriority] = useState('Low');
   const [dueDate, setDueDate] = useState(new Date());
-  const [isEditing, setIsEditing] = useState(null);
-  const [editedText, setEditedText] = useState('');
+  const [filter, setFilter] = useState('all');
 
-  const completedTasks = tasks.filter(task => task.completed).length;
-  const totalTasks = tasks.length;
-  const completionPercentage = totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
+  const taskRef = useRef(null);
 
-  // Save tasks to local storage whenever they change
   useEffect(() => {
-    localStorage.setItem('tasks', JSON.stringify(tasks));
-  }, [tasks]);
+    localStorage.setItem('taskLists', JSON.stringify(taskLists));
+  }, [taskLists]);
+
+  // Handle adding a new task list
+  const handleAddList = () => {
+    const newListName = prompt('Enter the new list name:');
+    if (newListName && newListName.trim() !== '') {
+      setTaskLists([...taskLists, { name: newListName, tasks: [] }]);
+    }
+  };
+
+  // Handle deleting a task list
+  const handleDeleteList = (index) => {
+    if (window.confirm(`Are you sure you want to delete the list "${taskLists[index].name}"?`)) {
+      const updatedTaskLists = taskLists.filter((_, i) => i !== index);
+      setTaskLists(updatedTaskLists);
+      setSelectedListIndex(0); // Reset to the first list if the deleted list was selected
+    }
+  };
 
   // Handle adding a new task
   const handleAddTask = () => {
@@ -35,50 +47,61 @@ function App() {
         completed: false,
         priority,
         dueDate: dueDate ? dueDate.toISOString() : null,
+        subtasks: [],
+        note: ''
       };
-      setTasks((prevTasks) => [...prevTasks, newTaskObject]);
+      const updatedTaskLists = [...taskLists];
+      updatedTaskLists[selectedListIndex].tasks = [...updatedTaskLists[selectedListIndex].tasks, newTaskObject];
+      setTaskLists(updatedTaskLists);
       setNewTask('');
       setPriority('Low');
       setDueDate(new Date());
     }
   };
 
-  // Handle task completion toggle
+  // Handle adding a note to a task
+  const handleAddNote = (index) => {
+    const note = prompt('Add a note to the task:', taskLists[selectedListIndex].tasks[index].note || '');
+    if (note !== null) {
+      const updatedTaskLists = [...taskLists];
+      updatedTaskLists[selectedListIndex].tasks[index].note = note;
+      setTaskLists(updatedTaskLists);
+    }
+  };
+
+  // Handle toggling a task as completed or incomplete
   const handleToggleTask = (index) => {
-    const updatedTasks = tasks.map((task, i) =>
-      i === index ? { ...task, completed: !task.completed } : task
-    );
-    setTasks(updatedTasks);
+    const updatedTaskLists = [...taskLists];
+    updatedTaskLists[selectedListIndex].tasks[index].completed = !updatedTaskLists[selectedListIndex].tasks[index].completed;
+    setTaskLists(updatedTaskLists);
   };
 
-  // Handle task deletion
-  const handleDeleteTask = (index) => {
-    const updatedTasks = tasks.filter((_, i) => i !== index);
-    setTasks(updatedTasks);
-  };
-
-  // Handle task editing
+  // Handle editing a task
   const handleEditTask = (index) => {
-    setIsEditing(index);
-    setEditedText(tasks[index].text);
+    const editedTask = prompt('Edit the task:', taskLists[selectedListIndex].tasks[index].text);
+    if (editedTask !== null) {
+      const updatedTaskLists = [...taskLists];
+      updatedTaskLists[selectedListIndex].tasks[index].text = editedTask;
+      setTaskLists(updatedTaskLists);
+    }
   };
 
-  // Handle save after editing a task
-  const handleSaveEdit = (index) => {
-    const updatedTasks = tasks.map((task, i) =>
-      i === index ? { ...task, text: editedText } : task
-    );
-    setTasks(updatedTasks);
-    setIsEditing(null);
-    setEditedText('');
+  // Handle deleting a task
+  const handleDeleteTask = (index) => {
+    if (window.confirm('Are you sure you want to delete this task?')) {
+      const updatedTaskLists = [...taskLists];
+      updatedTaskLists[selectedListIndex].tasks = updatedTaskLists[selectedListIndex].tasks.filter((_, i) => i !== index);
+      setTaskLists(updatedTaskLists);
+    }
   };
 
   // Filtering tasks based on status
-  const filteredTasks = tasks.filter(task => {
-    if (filter === 'completed') return task.completed;
-    if (filter === 'incomplete') return !task.completed;
-    return true;
-  });
+  const filteredTasks =
+    taskLists[selectedListIndex]?.tasks.filter((task) => {
+      if (filter === 'completed') return task.completed;
+      if (filter === 'incomplete') return !task.completed;
+      return true;
+    }) || [];
 
   return (
     <div className="app-container">
@@ -86,15 +109,49 @@ function App() {
 
       {/* Progress Bar */}
       <div className="progress-container">
-        <div className="progress-bar" style={{ width: `${completionPercentage}%` }}></div>
-        <span className="progress-text">{completionPercentage}% Completed</span>
+        <div
+          className="progress-bar"
+          style={{
+            width: `${filteredTasks.length ? (filteredTasks.filter((task) => task.completed).length / filteredTasks.length) * 100 : 0}%`,
+          }}
+        ></div>
+        <span className="progress-text">
+          {filteredTasks.length ? Math.round((filteredTasks.filter((task) => task.completed).length / filteredTasks.length) * 100) : 0}%
+          Completed
+        </span>
+      </div>
+
+      {/* Task List Selector */}
+      <div className="task-list-selector">
+        {taskLists.map((list, index) => (
+          <div key={index} className="task-list-button-container">
+            <button
+              onClick={() => setSelectedListIndex(index)}
+              className={`group-button ${selectedListIndex === index ? 'active' : ''}`}
+            >
+              {list.name}
+            </button>
+            <button onClick={() => handleDeleteList(index)} className="delete-list-button" title="Delete List">
+              &times;
+            </button>
+          </div>
+        ))}
+        <button onClick={handleAddList} className="add-list-button">
+          + Add List
+        </button>
       </div>
 
       {/* Filter Buttons */}
       <div className="filter-buttons">
-        <button onClick={() => setFilter('all')} className={`filter-button ${filter === 'all' ? 'active' : ''}`}>All</button>
-        <button onClick={() => setFilter('completed')} className={`filter-button ${filter === 'completed' ? 'active' : ''}`}>Completed</button>
-        <button onClick={() => setFilter('incomplete')} className={`filter-button ${filter === 'incomplete' ? 'active' : ''}`}>Incomplete</button>
+        <button onClick={() => setFilter('all')} className={`filter-button ${filter === 'all' ? 'active' : ''}`}>
+          All
+        </button>
+        <button onClick={() => setFilter('completed')} className={`filter-button ${filter === 'completed' ? 'active' : ''}`}>
+          Completed
+        </button>
+        <button onClick={() => setFilter('incomplete')} className={`filter-button ${filter === 'incomplete' ? 'active' : ''}`}>
+          Incomplete
+        </button>
       </div>
 
       {/* Input Section for Adding New Task */}
@@ -106,69 +163,55 @@ function App() {
           placeholder="Add a new task..."
           className="task-input"
         />
-        <select
-          value={priority}
-          onChange={(e) => setPriority(e.target.value)}
-          className="priority-select"
-        >
+        <select value={priority} onChange={(e) => setPriority(e.target.value)} className="priority-select">
           <option value="Low">Low</option>
           <option value="Medium">Medium</option>
           <option value="High">High</option>
         </select>
-        <DatePicker
-          selected={dueDate}
-          onChange={(date) => setDueDate(date)}
-          className="date-picker"
-          dateFormat="MM/dd/yyyy"
-        />
-        <button onClick={handleAddTask} className="add-button">Add</button>
+        <DatePicker selected={dueDate} onChange={(date) => setDueDate(date)} className="date-picker" />
+        <button onClick={handleAddTask} className="add-button">
+          Add
+        </button>
       </div>
 
       {/* Task List Section */}
-      {/* Task List Section */}
-<TransitionGroup className="task-list">
-  {filteredTasks.map((task, index) => (
-    <CSSTransition
-      key={index}
-      timeout={500}
-      classNames="task"
-    >
-      <li className={`task-item ${task.completed ? 'completed' : ''} ${task.priority ? task.priority.toLowerCase() : 'low'}`}>
-        {isEditing === index ? (
-          // Editing Task Input
-          <>
-            <input
-              type="text"
-              value={editedText}
-              onChange={(e) => setEditedText(e.target.value)}
-              className="task-input edit-input"
-            />
-            <button onClick={() => handleSaveEdit(index)} className="add-button">Save</button>
-            <button onClick={() => setIsEditing(null)} className="delete-button">Cancel</button>
-          </>
-        ) : (
-          <>
-            <span onClick={() => handleToggleTask(index)} className="task-text">
-              {task.text}
-            </span>
-            <span className={`priority-badge ${task.priority ? task.priority.toLowerCase() : 'low'}`}>{task.priority || 'Low'}</span>
-            <div className="due-date-container">
-              <span className="due-date-arrow">➞</span>
-              <span className="due-date">Due: {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'Not Set'}</span>
-            </div>
-            <div className="button-container">
-              <button onClick={() => handleEditTask(index)} className="edit-button">Edit</button>
-              <button onClick={() => handleDeleteTask(index)} className="delete-button">Delete</button>
-            </div>
-          </>
-        )}
-      </li>
-    </CSSTransition>
-  ))}
-</TransitionGroup>
-
+      <TransitionGroup component="ul" className="task-list">
+        {filteredTasks.map((task, index) => (
+          <CSSTransition key={index} timeout={500} classNames="task" nodeRef={taskRef}>
+            <li 
+              ref={taskRef} 
+              className={`task-item ${task.priority.toLowerCase()}`} // Add priority class here
+            >
+              {/* Main Task Content */}
+              <div className="task-main-content">
+                <span onClick={() => handleToggleTask(index)} className="task-text" title="Toggle Complete">
+                  {task.text}
+                </span>
+              </div>
+              {/* Edit, Delete, and Add Note Buttons */}
+              <div className="button-container">
+                <button onClick={() => handleEditTask(index)} className="edit-button">
+                  Edit
+                </button>
+                <button onClick={() => handleDeleteTask(index)} className="delete-button">
+                  Delete
+                </button>
+                <button onClick={() => handleAddNote(index)} className="add-note-button">
+                  Add Note
+                </button>
+              </div>
+            </li>
+          </CSSTransition>
+        ))}
+      </TransitionGroup>
     </div>
   );
 }
 
 export default App;
+
+
+
+
+
+

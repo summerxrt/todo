@@ -1,8 +1,6 @@
-/* App.css */
-
 /* General App Container Styles */
 .app-container {
-  max-width: 600px;
+  max-width: 800px;
   margin: 50px auto;
   padding: 20px;
   background: #f8f9fa;
@@ -20,75 +18,47 @@
 .input-container {
   display: flex;
   justify-content: space-between;
-  align-items: center; /* Aligns all items vertically in the center */
-  gap: 10px; /* Adds a consistent space between elements */
+  align-items: center;
   margin-bottom: 20px;
+  gap: 15px;
 }
 
 .task-input {
-  flex: 2;
-  padding: 10px;
+  flex: 3;
+  padding: 12px;
   border: 1px solid #ced4da;
-  border-radius: 5px;
+  border-radius: 8px;
   font-size: 16px;
-  height: 45px; /* Ensure consistent height with other elements */
 }
 
 /* Priority Selector Styles */
 .priority-select {
   flex: 1;
-  padding: 10px;
+  padding: 12px;
   border: 1px solid #ced4da;
-  border-radius: 5px;
+  border-radius: 8px;
   font-size: 16px;
   background-color: #f8f9fa;
-  height: 45px; /* Ensure consistent height with other elements */
 }
 
-/* Date Picker Styles */
+/* Due Date Picker Styles */
 .date-picker {
   flex: 1;
-  padding: 10px;
+  padding: 12px;
   border: 1px solid #ced4da;
-  border-radius: 5px;
-  font-size: 16px;
-  height: 45px; /* Ensure consistent height with other elements */
-}
-
-/* Add Button Styles */
-.add-button {
-  padding: 10px 20px;
-  background-color: #28a745;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  height: 45px; /* Ensure consistent height with other elements */
-}
-
-
-.task-input {
-  flex: 2;
-  padding: 10px;
-  border: 1px solid #ced4da;
-  border-radius: 5px;
+  border-radius: 8px;
   font-size: 16px;
 }
 
 /* Priority Badge Styles */
 .priority-badge {
-  width: 80px; /* Set a fixed width for consistency */
-  text-align: center; /* Center the text */
-  padding: 8px 0; /* Adjust padding to match the width */
+  padding: 8px 16px;
   border-radius: 5px;
   color: #fff;
   font-weight: bold;
-  margin-right: 10px;
-  display: inline-block; /* Ensure badges behave like consistent-sized buttons */
+  margin-left: 10px;
 }
 
-/* Specific Priority Colors */
 .priority-badge.low {
   background-color: #28a745;  /* Green */
 }
@@ -101,42 +71,85 @@
   background-color: #dc3545;  /* Red */
 }
 
-
+/* Add Button Styles */
 .add-button {
-  margin-left: 10px;
-  padding: 10px 20px;
-  background-color: #28a745;
+  flex: 1;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #007bff, #0056b3);
   color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, transform 0.3s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .add-button:hover {
-  background-color: #218838;
+  background-color: #0056b3;
+  transform: translateY(-2px);
 }
 
-/* Transition Animation Styles */
-.task-enter {
-  opacity: 0;
-  transform: scale(0.9);
+/* Edit, Delete, and Add Note Button Styles */
+.button-container button {
+  width: 100px; /* Consistent width */
+  padding: 8px 20px;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.task-enter-active {
-  opacity: 1;
-  transform: scale(1);
-  transition: opacity 500ms, transform 500ms;
+/* Specific Button Styles */
+.edit-button {
+  background: linear-gradient(135deg, #ffc107, #ffca28);
+  color: #fff;
+  border: none;
 }
 
-.task-exit {
-  opacity: 1;
+.edit-button:hover {
+  background-color: #e0a800;
+  transform: translateY(-2px);
 }
 
-.task-exit-active {
-  opacity: 0;
-  transform: scale(0.9);
-  transition: opacity 500ms, transform 500ms;
+.delete-button {
+  background: linear-gradient(135deg, #ff4d4f, #ff7875);
+  color: #fff;
+  border: none;
+}
+
+.delete-button:hover {
+  background-color: #d90429;
+  transform: translateY(-2px);
+}
+
+.add-note-button {
+  background: linear-gradient(135deg, #17a2b8, #138496);
+  color: #fff;
+  border: none;
+}
+
+.add-note-button:hover {
+  background-color: #117a8b;
+  transform: translateY(-2px);
+}
+
+/* Delete List Button */
+.delete-list-button {
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  background-color: #dc3545;  /* Red */
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.delete-list-button:hover {
+  background-color: #c82333;
+  transform: translateY(-2px);
 }
 
 /* Task List and Task Item Styles */
@@ -146,115 +159,94 @@
 }
 
 .task-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center; /* Aligns all elements in the task row */
-  padding: 10px;
-  margin-bottom: 10px;
+  padding: 15px;
+  margin-bottom: 15px;
   background: #fff;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
   transition: background-color 0.3s;
 }
 
-/* Task Text Style */
-.task-text {
-  cursor: pointer;
-  flex-grow: 2; /* Expands to take up available space */
-  margin-right: 10px;
+/* Dynamic Priority Line Styles with 5px thickness */
+.task-item.low::after,
+.task-item.medium::after,
+.task-item.high::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 5px; /* Increased thickness to 5px */
 }
 
-/* Due Date Container Styling */
-.due-date-container {
-  display: flex;
-  align-items: center;
-  margin-right: 10px;
+.task-item.low::after {
+  background-color: #28a745;  /* Green */
 }
 
-.due-date-arrow {
-  margin-right: 5px;
-  color: #888; /* Subtle color for the arrow */
-  font-size: 1.2rem; /* Slightly larger to stand out */
+.task-item.medium::after {
+  background-color: #ffc107;  /* Orange */
 }
 
-.due-date {
-  font-size: 0.9rem;
-  color: #555;
+.task-item.high::after {
+  background-color: #dc3545;  /* Red */
 }
 
-/* Button Container Styling */
+/* Update for Button Container */
 .button-container {
   display: flex;
+  flex-direction: column; /* Stack buttons vertically */
   gap: 10px; /* Space between buttons */
+  margin-top: 10px;
+  align-items: flex-end; /* Align buttons to the right end of the container */
 }
 
-.edit-button, .delete-button {
-  padding: 8px 15px; /* Adjust to make buttons similar in size to text */
-  font-size: 0.9rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-/* Colors for Edit and Delete Buttons */
-.edit-button {
-  background-color: #ffc107; /* Yellow for edit */
-  color: #fff;
-}
-
-.delete-button {
-  background-color: #dc3545; /* Red for delete */
-  color: #fff;
-}
-
-/* Button Hover Effects */
-.edit-button:hover {
-  background-color: #e0a800; /* Darker yellow */
-}
-
-.delete-button:hover {
-  background-color: #c82333; /* Darker red */
-}
-
-/* Filter Buttons Container */
-.filter-buttons {
+/* Filter Buttons and Task List Selector */
+.filter-buttons,
+.task-list-selector {
   display: flex;
-  justify-content: space-around;
+  gap: 15px;
   margin-bottom: 20px;
+  justify-content: center;
 }
 
-.filter-button {
-  padding: 8px 15px;
+.filter-button,
+.group-button,
+.add-list-button {
+  padding: 12px 25px;
   background-color: #6c757d;
   color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.filter-button.active {
+.filter-button.active,
+.group-button.active {
   background-color: #007bff;
 }
 
-.filter-button:hover {
+.filter-button:hover,
+.group-button:hover {
   background-color: #5a6268;
 }
 
-/* Progress Bar Styles */
+/* Progress Bar */
 .progress-container {
   width: 100%;
   background-color: #e9ecef;
-  border-radius: 5px;
-  margin-bottom: 20px;
+  border-radius: 8px;
+  margin-bottom: 35px;
   position: relative;
-  height: 20px;
+  height: 25px;
 }
 
 .progress-bar {
   height: 100%;
   background-color: #28a745;
-  border-radius: 5px;
+  border-radius: 8px;
   transition: width 0.4s ease-in-out;
 }
 
@@ -263,6 +255,6 @@
   width: 100%;
   text-align: center;
   top: 0;
-  color: #343a40;
   font-weight: bold;
+  color: #343a40;
 }
