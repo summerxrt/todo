@@ -1,5 +1,6 @@
 /* App.css */
 
+/* General App Container Styles */
 .app-container {
   max-width: 600px;
   margin: 50px auto;
@@ -15,19 +16,91 @@
   color: #343a40;
 }
 
+/* Input Section Styles */
 .input-container {
   display: flex;
   justify-content: space-between;
+  align-items: center; /* Aligns all items vertically in the center */
+  gap: 10px; /* Adds a consistent space between elements */
   margin-bottom: 20px;
 }
 
 .task-input {
+  flex: 2;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  font-size: 16px;
+  height: 45px; /* Ensure consistent height with other elements */
+}
+
+/* Priority Selector Styles */
+.priority-select {
   flex: 1;
   padding: 10px;
   border: 1px solid #ced4da;
   border-radius: 5px;
   font-size: 16px;
+  background-color: #f8f9fa;
+  height: 45px; /* Ensure consistent height with other elements */
 }
+
+/* Date Picker Styles */
+.date-picker {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  font-size: 16px;
+  height: 45px; /* Ensure consistent height with other elements */
+}
+
+/* Add Button Styles */
+.add-button {
+  padding: 10px 20px;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  height: 45px; /* Ensure consistent height with other elements */
+}
+
+
+.task-input {
+  flex: 2;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+/* Priority Badge Styles */
+.priority-badge {
+  width: 80px; /* Set a fixed width for consistency */
+  text-align: center; /* Center the text */
+  padding: 8px 0; /* Adjust padding to match the width */
+  border-radius: 5px;
+  color: #fff;
+  font-weight: bold;
+  margin-right: 10px;
+  display: inline-block; /* Ensure badges behave like consistent-sized buttons */
+}
+
+/* Specific Priority Colors */
+.priority-badge.low {
+  background-color: #28a745;  /* Green */
+}
+
+.priority-badge.medium {
+  background-color: #ffc107;  /* Orange */
+}
+
+.priority-badge.high {
+  background-color: #dc3545;  /* Red */
+}
+
 
 .add-button {
   margin-left: 10px;
@@ -44,6 +117,29 @@
   background-color: #218838;
 }
 
+/* Transition Animation Styles */
+.task-enter {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.task-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 500ms, transform 500ms;
+}
+
+.task-exit {
+  opacity: 1;
+}
+
+.task-exit-active {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 500ms, transform 500ms;
+}
+
+/* Task List and Task Item Styles */
 .task-list {
   list-style: none;
   padding: 0;
@@ -52,33 +148,121 @@
 .task-item {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: center; /* Aligns all elements in the task row */
   padding: 10px;
   margin-bottom: 10px;
   background: #fff;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s;
 }
 
-.task-item.completed .task-text {
-  text-decoration: line-through;
-  color: #6c757d;
-}
-
+/* Task Text Style */
 .task-text {
+  cursor: pointer;
+  flex-grow: 2; /* Expands to take up available space */
+  margin-right: 10px;
+}
+
+/* Due Date Container Styling */
+.due-date-container {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.due-date-arrow {
+  margin-right: 5px;
+  color: #888; /* Subtle color for the arrow */
+  font-size: 1.2rem; /* Slightly larger to stand out */
+}
+
+.due-date {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* Button Container Styling */
+.button-container {
+  display: flex;
+  gap: 10px; /* Space between buttons */
+}
+
+.edit-button, .delete-button {
+  padding: 8px 15px; /* Adjust to make buttons similar in size to text */
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
 }
 
+/* Colors for Edit and Delete Buttons */
+.edit-button {
+  background-color: #ffc107; /* Yellow for edit */
+  color: #fff;
+}
+
 .delete-button {
-  padding: 5px 10px;
-  background-color: #dc3545;
+  background-color: #dc3545; /* Red for delete */
+  color: #fff;
+}
+
+/* Button Hover Effects */
+.edit-button:hover {
+  background-color: #e0a800; /* Darker yellow */
+}
+
+.delete-button:hover {
+  background-color: #c82333; /* Darker red */
+}
+
+/* Filter Buttons Container */
+.filter-buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.filter-button {
+  padding: 8px 15px;
+  background-color: #6c757d;
   color: #fff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s ease;
 }
 
-.delete-button:hover {
-  background-color: #c82333;
+.filter-button.active {
+  background-color: #007bff;
+}
+
+.filter-button:hover {
+  background-color: #5a6268;
+}
+
+/* Progress Bar Styles */
+.progress-container {
+  width: 100%;
+  background-color: #e9ecef;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  position: relative;
+  height: 20px;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: #28a745;
+  border-radius: 5px;
+  transition: width 0.4s ease-in-out;
+}
+
+.progress-text {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  top: 0;
+  color: #343a40;
+  font-weight: bold;
 }
