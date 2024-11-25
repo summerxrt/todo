@@ -1,13 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
 function App() {
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState(() => {
+    console.log("Loading tasks from LocalStorage...");
+    const savedTasks = localStorage.getItem('tasks');
+    if (savedTasks) {
+      console.log("Tasks loaded: ", JSON.parse(savedTasks));
+    }
+    return savedTasks ? JSON.parse(savedTasks) : [];
+  });
   const [newTask, setNewTask] = useState('');
+
+  // Save tasks to local storage whenever they change
+  useEffect(() => {
+    console.log("Saving to LocalStorage: ", tasks);
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+  }, [tasks]);
 
   const handleAddTask = () => {
     if (newTask.trim() !== '') {
-      setTasks([...tasks, { text: newTask, completed: false }]);
+      const newTaskObject = { text: newTask, completed: false };
+      setTasks((prevTasks) => {
+        const updatedTasks = [...prevTasks, newTaskObject];
+        console.log("Adding Task: ", newTaskObject);
+        console.log("Updated Task List: ", updatedTasks);
+        return updatedTasks;
+      });
       setNewTask('');
     }
   };
