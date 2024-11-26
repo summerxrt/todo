@@ -31,8 +31,8 @@
   font-size: 16px;
 }
 
-/* Priority Selector Styles */
-.priority-select {
+.priority-select,
+.date-picker {
   flex: 1;
   padding: 12px;
   border: 1px solid #ced4da;
@@ -41,37 +41,6 @@
   background-color: #f8f9fa;
 }
 
-/* Due Date Picker Styles */
-.date-picker {
-  flex: 1;
-  padding: 12px;
-  border: 1px solid #ced4da;
-  border-radius: 8px;
-  font-size: 16px;
-}
-
-/* Priority Badge Styles */
-.priority-badge {
-  padding: 8px 16px;
-  border-radius: 5px;
-  color: #fff;
-  font-weight: bold;
-  margin-left: 10px;
-}
-
-.priority-badge.low {
-  background-color: #28a745;  /* Green */
-}
-
-.priority-badge.medium {
-  background-color: #ffc107;  /* Orange */
-}
-
-.priority-badge.high {
-  background-color: #dc3545;  /* Red */
-}
-
-/* Add Button Styles */
 .add-button {
   flex: 1;
   padding: 12px 20px;
@@ -89,18 +58,93 @@
   transform: translateY(-2px);
 }
 
-/* Edit, Delete, and Add Note Button Styles */
+/* Progress Bar */
+.progress-container {
+  width: 100%;
+  background-color: #e9ecef;
+  border-radius: 8px;
+  margin-bottom: 35px;
+  position: relative;
+  height: 25px;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: #28a745;
+  border-radius: 8px;
+  transition: width 0.4s ease-in-out;
+}
+
+.progress-text {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  top: 0;
+  font-weight: bold;
+  color: #343a40;
+}
+
+/* Task List and Task Item Styles */
+.task-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.task-item {
+  position: relative;
+  padding: 10px 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Dynamic Priority Line Styles */
+.task-item.low::after,
+.task-item.medium::after,
+.task-item.high::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+}
+
+.task-item.low::after {
+  background-color: #28a745; /* Green */
+}
+
+.task-item.medium::after {
+  background-color: #ffc107; /* Orange */
+}
+
+.task-item.high::after {
+  background-color: #dc3545; /* Red */
+}
+
+/* Button Container */
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+/* Button Styling */
 .button-container button {
-  width: 100px; /* Consistent width */
-  padding: 8px 20px;
-  font-size: 1rem;
+  width: 90px;
+  padding: 8px;
+  font-size: 0.9rem;
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Specific Button Styles */
 .edit-button {
   background: linear-gradient(135deg, #ffc107, #ffca28);
   color: #fff;
@@ -136,72 +180,59 @@
 
 /* Delete List Button */
 .delete-list-button {
-  padding: 8px 12px;
+  position: relative;
+  padding: 8px 10px;
   font-size: 0.9rem;
-  background-color: #dc3545;  /* Red */
+  background-color: #dc3545;
   color: #fff;
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  margin-left: 2px;
   transition: background-color 0.3s ease-in-out;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .delete-list-button:hover {
   background-color: #c82333;
   transform: translateY(-2px);
 }
-
-/* Task List and Task Item Styles */
-.task-list {
-  list-style: none;
-  padding: 0;
-}
-
-.task-item {
-  padding: 15px;
-  margin-bottom: 15px;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-  position: relative;
-  transition: background-color 0.3s;
-}
-
-/* Dynamic Priority Line Styles with 5px thickness */
-.task-item.low::after,
-.task-item.medium::after,
-.task-item.high::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 5px; /* Increased thickness to 5px */
-}
-
-.task-item.low::after {
-  background-color: #28a745;  /* Green */
-}
-
-.task-item.medium::after {
-  background-color: #ffc107;  /* Orange */
-}
-
-.task-item.high::after {
-  background-color: #dc3545;  /* Red */
-}
-
-/* Update for Button Container */
-.button-container {
-  display: flex;
-  flex-direction: column; /* Stack buttons vertically */
-  gap: 10px; /* Space between buttons */
+/* Subtask Button */
+.add-subtask-button {
   margin-top: 10px;
-  align-items: flex-end; /* Align buttons to the right end of the container */
+  padding: 8px 12px;
+  background: linear-gradient(135deg, #17a2b8, #138496);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  font-size: 14px;
 }
 
-/* Filter Buttons and Task List Selector */
+.add-subtask-button:hover {
+  background-color: #117a8b;
+}
+
+/* Subtask List */
+.subtask-list {
+  padding-left: 20px;
+  margin-top: 10px;
+}
+
+.subtask-item {
+  font-size: 14px;
+  color: #555;
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+
+.subtask-item.completed {
+  text-decoration: line-through;
+  color: #999;
+}
+
+
+/* Filter Buttons */
 .filter-buttons,
 .task-list-selector {
   display: flex;
@@ -231,30 +262,4 @@
 .filter-button:hover,
 .group-button:hover {
   background-color: #5a6268;
-}
-
-/* Progress Bar */
-.progress-container {
-  width: 100%;
-  background-color: #e9ecef;
-  border-radius: 8px;
-  margin-bottom: 35px;
-  position: relative;
-  height: 25px;
-}
-
-.progress-bar {
-  height: 100%;
-  background-color: #28a745;
-  border-radius: 8px;
-  transition: width 0.4s ease-in-out;
-}
-
-.progress-text {
-  position: absolute;
-  width: 100%;
-  text-align: center;
-  top: 0;
-  font-weight: bold;
-  color: #343a40;
 }

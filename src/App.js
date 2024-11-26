@@ -61,10 +61,24 @@ function App() {
 
   // Handle adding a note to a task
   const handleAddNote = (index) => {
-    const note = prompt('Add a note to the task:', taskLists[selectedListIndex].tasks[index].note || '');
+    const currentNote = taskLists[selectedListIndex].tasks[index]?.note || '';
+    const note = prompt('Add a note to the task:', currentNote);
     if (note !== null) {
       const updatedTaskLists = [...taskLists];
-      updatedTaskLists[selectedListIndex].tasks[index].note = note;
+      updatedTaskLists[selectedListIndex].tasks[index].note = note.trim();
+      setTaskLists(updatedTaskLists);
+    }
+  };
+
+  // Handle adding a subtask
+  const handleAddSubtask = (taskIndex) => {
+    const subtask = prompt('Enter a subtask:');
+    if (subtask && subtask.trim() !== '') {
+      const updatedTaskLists = [...taskLists];
+      updatedTaskLists[selectedListIndex].tasks[taskIndex].subtasks.push({
+        text: subtask,
+        completed: false,
+      });
       setTaskLists(updatedTaskLists);
     }
   };
@@ -76,12 +90,20 @@ function App() {
     setTaskLists(updatedTaskLists);
   };
 
+  // Handle toggling a subtask as completed or incomplete
+  const handleToggleSubtask = (taskIndex, subtaskIndex) => {
+    const updatedTaskLists = [...taskLists];
+    const subtask = updatedTaskLists[selectedListIndex].tasks[taskIndex].subtasks[subtaskIndex];
+    subtask.completed = !subtask.completed;
+    setTaskLists(updatedTaskLists);
+  };
+
   // Handle editing a task
   const handleEditTask = (index) => {
     const editedTask = prompt('Edit the task:', taskLists[selectedListIndex].tasks[index].text);
     if (editedTask !== null) {
       const updatedTaskLists = [...taskLists];
-      updatedTaskLists[selectedListIndex].tasks[index].text = editedTask;
+      updatedTaskLists[selectedListIndex].tasks[index].text = editedTask.trim();
       setTaskLists(updatedTaskLists);
     }
   };
@@ -178,26 +200,44 @@ function App() {
       <TransitionGroup component="ul" className="task-list">
         {filteredTasks.map((task, index) => (
           <CSSTransition key={index} timeout={500} classNames="task" nodeRef={taskRef}>
-            <li 
-              ref={taskRef} 
-              className={`task-item ${task.priority.toLowerCase()}`} // Add priority class here
-            >
-              {/* Main Task Content */}
-              <div className="task-main-content">
+            <li ref={taskRef} className={`task-item ${task.priority.toLowerCase()}`}>
+              <div>
                 <span onClick={() => handleToggleTask(index)} className="task-text" title="Toggle Complete">
                   {task.text}
                 </span>
+                {task.note && <p className="task-note">Note: {task.note}</p>}
               </div>
-              {/* Edit, Delete, and Add Note Buttons */}
+
+              {/* Subtask Section */}
+              {task.subtasks?.length > 0 && (
+                <ul className="subtask-list">
+                  {task.subtasks.map((subtask, subIndex) => (
+                    <li
+                      key={subIndex}
+                      className={`subtask-item ${subtask.completed ? 'completed' : ''}`}
+                      onClick={() => handleToggleSubtask(index, subIndex)}
+                    >
+                      {subtask.text}
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              {/* Button to Add Subtask */}
+              <button onClick={() => handleAddSubtask(index)} className="add-subtask-button">
+                Add Subtask
+              </button>
+
+              {/* Edit, Note, and Delete Buttons */}
               <div className="button-container">
                 <button onClick={() => handleEditTask(index)} className="edit-button">
                   Edit
                 </button>
+                <button onClick={() => handleAddNote(index)} className="add-note-button">
+                  Note
+                </button>
                 <button onClick={() => handleDeleteTask(index)} className="delete-button">
                   Delete
-                </button>
-                <button onClick={() => handleAddNote(index)} className="add-note-button">
-                  Add Note
                 </button>
               </div>
             </li>
@@ -209,6 +249,10 @@ function App() {
 }
 
 export default App;
+
+
+
+
 
 
 
